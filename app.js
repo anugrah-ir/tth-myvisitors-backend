@@ -1,21 +1,25 @@
 const express = require('express');
-const sequelize = require('./src/config/database')
+const sequelize = require('./src/config/database');
+const routes = require('./src/routes/index');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-    res.send('success');
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-try {
-    sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-} catch (error) {
-    console.error('Unable to connect to the database:', error);
-}
+app.use('/', routes);
 
+sequelize.sync({ force: true })
+    .then(() => {
+        console.log('Database synchronized');
+    })
+    .catch((error) => {
+        console.error('Error synchronizing the database:', error);
+    });
+    
 app
     .listen(port, () => {
         console.log(`App listening on port ${port}`);
