@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const { success, error } = require('../utils/response');
+const { sendSucces, sendError } = require('../middlewares/responseHandler');
+const { BadRequestError, UnauthorizedError, NotFoundError } = require('../utils/customError');
 
 const createUser = async (req, res) => {
     try {
@@ -7,12 +8,12 @@ const createUser = async (req, res) => {
         const user = await User.create({ name, email, password, role });
 
         if (user) {
-            return success(res, 201, true, 'User created successfully.', user);
+            res.sendSuccess(200, 'User created successfully.', user);
         } else {
-            return error(res, 400, false, 'Failed to create user. Ensure all required fields are filled correctly.');
+            throw new BadRequestError('Failed to create user. Ensure all required fields are filled correctly.');
         }
-    } catch (err) {
-        return error(res, 500, false, err.message);
+    } catch (error) {
+        res.sendError(error.statusCode, error.message, error.name);
     }
 };
 
@@ -21,12 +22,12 @@ const findUserByID = async (req, res) => {
         const user = await User.findOne({ where: { id: req.params.id } });
 
         if (user) {
-            return success(res, 200, true, 'User found successfully.', user);
+            res.sendSuccess(200, 'User found successfully.', user);
         } else {
-            return error(res, 404, false, 'User not found. Please check the ID and try again.');
+            throw new NotFoundError('User not found. Please check the ID and try again.');
         }
-    } catch (err) {
-        return error(res, 500, false, err.message);
+    } catch (error) {
+        res.sendError(error.statusCode, error.message, error.name);
     }
 };
 
@@ -37,12 +38,12 @@ const updateUserByID = async (req, res) => {
         if (user) {
             const { name, email, password, role } = req.body;
             const updatedUser = await user.update({ name, email, password, role });
-            return success(res, 200, true, 'User updated successfully.', updatedUser);
+            res.sendSuccess(200, 'User updated successfully.', updatedUser);
         } else {
-            return error(res, 404, false, 'User not found. Please check the ID and try again.');
+            throw new NotFoundError('User not found. Please check the ID and try again.');
         }
-    } catch (err) {
-        return error(res, 500, false, err.message);
+    } catch (error) {
+        res.sendError(error.statusCode, error.message, error.name);
     }
 };
 
@@ -52,13 +53,13 @@ const deleteUserByID = async (req, res) => {
 
         if (user) {
             const deletedUser = await user.destroy();
-            return success(res, 200, true, 'User deleted successfully.', deletedUser);
+            res.sendSuccess(200, 'User deleted successfully.', deletedUser);
         }
         else {
-            return error(res, 404, false, 'User not found. Please check the ID and try again.');
+            throw new NotFoundError('User not found. Please check the ID and try again.');
         }
-    } catch (err) {
-        return error(res, 500, false, err.message);
+    } catch (error) {
+        res.sendError(error.statusCode, error.message, error.name);
     }
 };
 

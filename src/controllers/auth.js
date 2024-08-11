@@ -3,7 +3,8 @@ const emailValidator = require('email-validator');
 const passwordValidator = require('password-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { success, error } = require('../utils/response');
+const { success, error } = require('../middlewares/responseHandler');
+const { BadRequestError, UnauthorizedError, NotFoundError } = require('../utils/customError');
 require('dotenv').config;
 
 const passwordSchema = new passwordValidator();
@@ -17,13 +18,13 @@ passwordSchema
 
 const validateEmail = (email) => {
     if (!emailValidator.validate(email)) {
-        throw new Error('Please enter a valid email address.');
+        throw new BadRequestError('Please enter a valid email address.');
     }
 };
 
 const validatePassword = (password, passwordSchema) => {
     if (!passwordSchema.validate(password)) {
-        throw new Error('Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.')
+        throw new BadRequestError('Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.')
     }
 };
 
@@ -42,10 +43,10 @@ const register = async (req, res) => {
         const user = await User.create({ name, email, password: hashedPassword, role });
         const token = generateToken(user.id);
 
-        return success(res, 200, true, "Register Successful", token);
+        res.sendSuccess(200, 'Register Successful', token);
     }
-    catch (err) {
-        return error(res, 400, false, err);
+    catch (error) {
+        res.sendError(error.statusCode, error.message, error.name);
     }
 };
 
@@ -54,21 +55,20 @@ const login = async (req, res) => {
         const { email, password } = req.body;
 
         validateEmail(email);
-        validatePassword(password, passwordSchema);
-
+        
         const user = await User.findOne({ where: { email : email } });
         if (!user)
-            throw "The email is not registered";
+            throw new NotFoundError('The email is not registered');
 
         if (!await bcrypt.compare(password, user.password))
-            throw "Invalid email or password";
+            throw new UnauthorizedError('Invalid email or password');
 
         const token = generateToken(user.id);
 
-        return success(res, 200, true, "Login Successful", token);
+        res.sendSuccess(200, "Login Successful", token);
     }
-    catch (err) {
-        return error(res, 400, false, err);
+    catch (error) {
+        res.sendError(error.statusCode, error.message, error.name);
     }
 };
 
