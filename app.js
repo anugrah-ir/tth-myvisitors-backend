@@ -4,6 +4,7 @@ const routes = require('./src/routes/index');
 const bodyParser = require('body-parser');
 const responseHandler = require('./src/middlewares/responseHandler');
 const cors = require('cors');
+
 require('dotenv').config();
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', routes);
+app.use(express.static('public'));
 
 sequelize.sync({ force: true })
     .then(() => {

@@ -1,6 +1,5 @@
 const sequelize = require('../config/database');
 const DataTypes = require('sequelize');
-const { BadRequestError, NotFoundError } = require('../utils/customError');
 
 const User = sequelize.define(
     'User',
@@ -10,7 +9,7 @@ const User = sequelize.define(
             allowNull: false,
             unique: true,
             primaryKey: true,
-            autoIncrement: true,
+            autoIncrement: true
         },
         name: {
             type: DataTypes.STRING,
@@ -49,18 +48,17 @@ const findUser = async (criteria) => {
 };
 
 const updateUser = async (criteria, data) => {
-    const user = await User.findOne({ where: criteria });
-    const updatedUser = await user.update(data);
-    return updatedUser ? updatedUser: false;
+    const user = await User.update(data, { where: criteria });
+    return user ? user: false;
 };
 
 const deleteUser = async (criteria) => {
-    const user = await User.findOne({ where: criteria });
-    const deletedUser = await user.destroy();
-    return deletedUser ? deletedUser: false;
+    const user = await User.destroy({ where: criteria });
+    return user ? user: false;
 };
 
 module.exports = {
+    User,
     createUser,
     findUser,
     updateUser,

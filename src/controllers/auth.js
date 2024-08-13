@@ -1,9 +1,9 @@
+const { BadRequestError, UnauthorizedError, NotFoundError, ConflictError } = require('../utils/customError');
 const { createUser, findUser } = require('../models/user');
 const emailValidator = require('email-validator');
 const passwordValidator = require('password-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { BadRequestError, UnauthorizedError, NotFoundError, ConflictError } = require('../utils/customError');
 require('dotenv').config;
 
 const passwordSchema = new passwordValidator();
