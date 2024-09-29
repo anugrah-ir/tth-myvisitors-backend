@@ -1,23 +1,19 @@
-const responseHandler = (req, res, next) => {
-
-    res.sendSuccess = (status = 200, message = '', data = null) => {
-        res.status(status).json({
-            status: 'success',
+const sendResponse = {
+    success: (res, statusCode = 200, message = 'Success', data = {}) => {
+        return res.status(statusCode).json({
+            success: true,
             message,
             data
         });
-    };
-
-    res.sendError = (status = 500, message = 'Internal server error', error = null) => {
-        res.status(status).json({
-            status: 'error',
+    },
+  
+    error: (res, statusCode = 500, message = 'Internal Server Error', error = null) => {
+        return res.status(statusCode).json({
+            success: false,
             message,
             error
         });
-    };
-
-    next();
-
+    }
 };
 
-module.exports = responseHandler;
+module.exports = sendResponse;

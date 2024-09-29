@@ -2,7 +2,6 @@ const express = require('express');
 const sequelize = require('./src/config/database');
 const routes = require('./src/routes/index');
 const bodyParser = require('body-parser');
-const responseHandler = require('./src/middlewares/responseHandler');
 const cors = require('cors');
 
 require('dotenv').config();
@@ -11,7 +10,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(responseHandler);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
