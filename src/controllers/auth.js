@@ -1,5 +1,5 @@
 const sendResponse = require('../middlewares/responseHandler');
-const { createUser, findUser } = require('../models/user');
+const User = require('../models/user');
 const emailValidator = require('email-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -11,20 +11,20 @@ const generateToken = (userID) => {
 
 const register = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, phoneNumber, role, companyIDPhoto, integrityPact } = req.body;
 
         const isEmailValid = emailValidator.validate(email);
         if (!isEmailValid) {
             return sendResponse.error(res, 400, 'The email address is invalid');
         }
 
-        const isEmailRegistered = await findUser({ email: email })
+        const isEmailRegistered = await User.findOne({ where: { email: email }});
         if (isEmailRegistered) {
             return sendResponse.error(res, 409, 'The email is already registered');
         }
           
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await createUser({ name, email, password: hashedPassword, role });
+        const user = await user.create({ name, email, password: hashedPassword, phoneNumber, selfiePhoto: req.file.path, role, companyIDPhoto, integrityPact });
         const token = generateToken(user.id);
         return sendResponse.success(res, 200, 'Register successful', token);
     }
@@ -37,7 +37,7 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await findUser({ email: email });
+        const user = await User.findOne({ where: { email: email }});
         if (!user) {
             return sendResponse.error(res, 400, 'Invalid email or password');
         }

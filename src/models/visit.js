@@ -1,8 +1,8 @@
 const sequelize = require('../config/database');
 const DataTypes = require('sequelize');
 
-const Access = sequelize.define(
-    'Access',
+const Visit = sequelize.define(
+    'Visit',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -19,17 +19,36 @@ const Access = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
+        employeeId: {
+            type: DataTypes.INTEGER
+        },
+        purposeId: {
+            type: DataTypes.INTEGER
+        },
+        customPurpose: {
+            type: DataTypes.STRING
+        },
         accessDocument: {
             type: DataTypes.STRING,
-            allowNull: false,
             unique: true
         },
-        startDate: {
+        date: {
             type: DataTypes.DATEONLY,
             allowNull: false
         },
-        endDate: {
-            type: DataTypes.DATEONLY,
+        startTime: {
+            type: DataTypes.TIME,
+            allowNull: false
+        },
+        endTime: {
+            type: DataTypes.TIME,
+            allowNull: false
+        },
+        visitorCardNumber: {
+            type: DataTypes.INTEGER
+        },
+        status: {
+            type: DataTypes.ENUM('notStarted', 'ongoing', 'finished'),
             allowNull: false
         }
     },
@@ -38,4 +57,4 @@ const Access = sequelize.define(
     }
 );
 
-module.exports = Access;
+module.exports = Visit;
