@@ -17,7 +17,7 @@ Back end for MyVisitors, a visitor management system developed by Telkom Test Ho
 
 - Node.js
 - Express.js
-- MongoDB
+- MySQL (via Sequelize ORM)
 - JWT Authentication
 
 ## Installation
