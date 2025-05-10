@@ -22,7 +22,7 @@ const Access = sequelize.define(
         accessDocument: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: false
         },
         startDate: {
             type: DataTypes.DATEONLY,

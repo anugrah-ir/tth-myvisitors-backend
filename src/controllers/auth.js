@@ -24,7 +24,7 @@ const register = async (req, res) => {
         }
           
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await user.create({ name, email, password: hashedPassword, phoneNumber, selfiePhoto: req.file.path, role, companyIDPhoto, integrityPact });
+        const user = await User.create({ name, email, password: hashedPassword, phoneNumber, selfiePhoto: req.file.filename, role, companyIDPhoto, integrityPact });
         const token = generateToken(user.id);
         return sendResponse.success(res, 200, 'Register successful', token);
     }

@@ -20,7 +20,7 @@ const Visit = sequelize.define(
             allowNull: false
         },
         employeeId: {
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
         },
         purposeId: {
             type: DataTypes.INTEGER
@@ -37,12 +37,10 @@ const Visit = sequelize.define(
             allowNull: false
         },
         startTime: {
-            type: DataTypes.TIME,
-            allowNull: false
+            type: DataTypes.TIME
         },
         endTime: {
-            type: DataTypes.TIME,
-            allowNull: false
+            type: DataTypes.TIME
         },
         visitorCardNumber: {
             type: DataTypes.INTEGER

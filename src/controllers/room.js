@@ -13,6 +13,16 @@ const addRoom = async (req, res) => {
     }
 };
 
+const getRoomByID = async (req, res) => {
+    try {
+        const room = await Room.findOne({ where: { id: req.params['id'] } });
+        return sendResponse.success(res, 200, 'Room:', room);
+    }
+    catch (error) {
+        return sendResponse.error(res, 500, 'Internal Server Error', error);
+    }
+};
+
 const getAllRooms = async (req, res) => {
     try {
         const rooms = await Room.findAll();
@@ -59,6 +69,7 @@ const deleteRoom = async (req, res) => {
 
 module.exports = {
     addRoom,
+    getRoomByID,
     getAllRooms,
     updateRoom,
     deleteRoom

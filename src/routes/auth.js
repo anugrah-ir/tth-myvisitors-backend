@@ -1,5 +1,6 @@
 const express = require('express');
 const authRoute = express.Router();
+const upload = require('../middlewares/uploader');
 
 const {
     register,
@@ -7,7 +8,7 @@ const {
 } = require('../controllers/auth');
 
 authRoute
-    .post('/register', register)
+    .post('/register', upload.single('selfiePhoto'), register)
     .post('/login', login);
 
 module.exports = authRoute;

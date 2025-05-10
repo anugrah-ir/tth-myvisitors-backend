@@ -3,6 +3,7 @@ const sequelize = require('./src/config/database');
 const routes = require('./src/routes/index');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -11,13 +12,15 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/', routes);
 app.use(express.static('public'));
 
-sequelize.sync({ force: true })
+sequelize.sync()
     .then(() => {
         console.log('Database synchronized');
     })

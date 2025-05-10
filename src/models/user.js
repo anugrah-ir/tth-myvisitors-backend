@@ -28,7 +28,7 @@ const User = sequelize.define(
             allowNull: false
         },
         phoneNumber: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
             allowNull: false
         },
         selfiePhoto: {
